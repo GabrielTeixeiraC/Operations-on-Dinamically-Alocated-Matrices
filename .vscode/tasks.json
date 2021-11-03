@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar",
+            "type": "shell",
+            "command": "g++ ${relativeFile} -o ${relativeFileDirname}/${fileBasenameNoExtension}.exe -g",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Rodar",
+            "type": "shell",
+            "command": "./${relativeFileDirname}/${fileBasenameNoExtension}.exe",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
