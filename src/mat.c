@@ -185,7 +185,6 @@ void multiplicaMatrizes(mat_tipo * a, mat_tipo * b, mat_tipo * c)
             }     
         }
     }
-
 }
 
 void transpoeMatriz(mat_tipo * a)
