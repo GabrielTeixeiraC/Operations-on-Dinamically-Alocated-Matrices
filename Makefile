@@ -15,6 +15,8 @@ SRC = src
 OBJ = obj
 INC = include
 BIN = bin
+TMPDIR = tmp
+TMP = $(TMPDIR)/res.txt $(TMPDIR)/log.txt
 OBJS = $(OBJ)/matop.o $(OBJ)/mat.o $(OBJ)/memlog.o
 HDRS = $(INC)/mat.h $(INC)/memlog.h $(INC)/msgassert.h
 CFLAGS = -Wall -c -I$(INC) 
@@ -22,9 +24,9 @@ CFLAGS = -Wall -c -I$(INC)
 EXE = $(BIN)/matop
 
 all: $(EXE)
-	$(EXE) -s -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
-	$(EXE) -m -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
-	$(EXE) -t -1 matrizes/250x250/0.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
+	$(EXE) -s -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
+	$(EXE) -m -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
+	$(EXE) -t -1 matrizes/250x250/0.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
 
 $(BIN)/matop: $(OBJS)
 	$(CC) -o $(BIN)/matop $(OBJS) $(LIBS)
@@ -39,4 +41,4 @@ $(OBJ)/memlog.o: $(HDRS) $(SRC)/memlog.c
 	$(CC) $(CFLAGS) -o $(OBJ)/memlog.o $(SRC)/memlog.c 
 	
 clean:
-	rm $(EXE) $(OBJS) 
+	rm $(EXE) $(OBJS) $(TMP)

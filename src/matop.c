@@ -32,12 +32,12 @@ void uso()
     fprintf(stderr,"matop\n");
     fprintf(stderr,"\t-s \t(soma matrizes) \n");
     fprintf(stderr,"\t-m \t(multiplica matrizes) \n");
-    fprintf(stderr,"\t-t \t(transpõe matriz 1)\n");
+    fprintf(stderr,"\t-t \t(transpoe matriz 1)\n");
     fprintf(stderr,"\t-1 m1.txt \t(matriz 1)\n");
     fprintf(stderr,"\t-2 m2.txt \t(matriz 2)\n");
     fprintf(stderr,"\t-o res.out \t(matriz resultante)\n");
     fprintf(stderr,"\t-p log.out \t(registro de desempenho)\n");
-    fprintf(stderr,"\t-l \t(padrão de acesso e localidade)\n");
+    fprintf(stderr,"\t-l \t(padrao de acesso e localidade)\n");
 }
 
 void parse_args(int argc,char ** argv)
@@ -98,21 +98,33 @@ void parse_args(int argc,char ** argv)
                     uso();
                     exit(1);
         }
+
         // verificacao da consistencia das opcoes
-        erroAssert(opescolhida>0,"matop - necessario escolher operacao");
-        // verificação das opções obrigatórias
+        erroAssert(opescolhida>0, "matop - necessario escolher operacao");
+
+        // verificação de existência dos nomes dos arquivos obrigatórios
         erroAssert(strlen(nomeArquivoMatriz1) > 0, "matop - nome de arquivo da matriz 1 tem que ser definido");
         erroAssert(strlen(nomeArquivoSaida) > 0, "matop - nome de arquivo do resultado tem que ser definido");
+
+        // verificação do tamanho máximo dos nomes dos arquivos necessários
+        erroAssert(strlen(nomeArquivoMatriz1) <= 100, "matop - nome de arquivo da matriz 1 excede o limite de caracteres");
+        erroAssert(strlen(nomeArquivoSaida) <= 100, "matop - nome de arquivo do resultado excede o limite de caracteres");
         
         // verificação das opções não obrigatórias
         if (opcao2){
+            // verificação de existência do nome do arquivo da matriz 2
             erroAssert(strlen(nomeArquivoMatriz2) > 0, "matop - nome de arquivo da matriz 2 tem que ser definido");
+
+            // verificação do tamanho máximo do nome do arquivo da matriz 2
+            erroAssert(strlen(nomeArquivoMatriz2) <= 100, "matop - nome de arquivo da matriz 2 excede o limite de caracteres");
         }
         if (opcaoP){
+            // verificação de existência do nome do arquivo de registro
             erroAssert(strlen(lognome) > 0, "matop - nome de arquivo de registro de acesso tem que ser definido");
+
+            // verificação do tamanho máximo do nome do arquivo de registro
+            erroAssert(strlen(lognome) <= 100, "matop - nome de arquivo de registro de acesso excede o limite de caracteres");
         }
-        
-        
 }
 
 void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
@@ -127,12 +139,13 @@ void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
     int linhas, colunas;
     
     // copia o nome do arquivo para um vetor de char para facilitar o uso
+    // os nomes dos arquivos já foram verificados na função parse args
     char nomeDoArquivo[100] = "";
     strcpy(nomeDoArquivo, nomeDoArquivoPonteiro);
     
     // abre arquivo para leitura de texto
     arquivo = fopen(nomeDoArquivo, "rt");
-    erroAssert(arquivo != NULL, "Arquivo de matriz não pôde ser aberto");
+    erroAssert(arquivo != NULL, "Arquivo de matriz nao pode ser aberto");
     
     // cria matriz com o numero de linhas e colunas especificado no arquivo
     fscanf(arquivo, "%d %d", &linhas, &colunas);
@@ -172,7 +185,7 @@ int main(int argc, char ** argv)
     
     // abre arquivo de resultado
     arquivoSaida = fopen(nomeArquivoSaida, "wt");
-    erroAssert(arquivoSaida != NULL,"Arquivo de resultado não pôde ser aberto");
+    erroAssert(arquivoSaida != NULL,"Arquivo de resultado nao pode ser aberto");
 
     // execucao dependente da operacao escolhida
     switch (opescolhida){
@@ -182,7 +195,7 @@ int main(int argc, char ** argv)
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
             leMatrizDoArquivo(nomeArquivoMatriz2, &b);
             somaMatrizes(&a, &b, &c);
-            imprimeMatriz(&c, arquivoSaida);
+            imprimeMatrizNoArquivo(&c, arquivoSaida);
             destroiMatriz(&a);
             destroiMatriz(&b);
             destroiMatriz(&c);
@@ -193,7 +206,7 @@ int main(int argc, char ** argv)
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
             leMatrizDoArquivo(nomeArquivoMatriz2, &b);
             multiplicaMatrizes(&a,&b,&c);
-            imprimeMatriz(&c, arquivoSaida);
+            imprimeMatrizNoArquivo(&c, arquivoSaida);
             destroiMatriz(&a);
             destroiMatriz(&b);
             destroiMatriz(&c);
@@ -202,7 +215,7 @@ int main(int argc, char ** argv)
             // recebe de arquivo matriz a, que é transposta, impressa e destruida
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
             transpoeMatriz(&a);
-            imprimeMatriz(&a, arquivoSaida);
+            imprimeMatrizNoArquivo(&a, arquivoSaida);
             destroiMatriz(&a);
             break;
         default:
@@ -215,6 +228,6 @@ int main(int argc, char ** argv)
     fclose(arquivoSaida);
 
     // conclui registro de acesso
-    return finalizaMemLog();
-
+    finalizaMemLog();  
+    return 0;
 }

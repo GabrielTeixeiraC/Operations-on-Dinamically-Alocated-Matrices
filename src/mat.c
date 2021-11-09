@@ -31,12 +31,12 @@ void criaMatriz(mat_tipo * mat, int linhas, int colunas)
 
     // aloca a memória necessária para os ponteiros para double* 
     mat->matriz = malloc(linhas * sizeof(double*));
-    erroAssert(!(mat->matriz == NULL), "Ponteiro não alocado");
+    erroAssert(!(mat->matriz == NULL), "Ponteiro nao foi alocado");
     
     // aloca a memória necessária para os ponteiros para double
     for (int i = 0; i < linhas; i++){
         mat->matriz[i] = malloc(colunas * sizeof(double));
-        erroAssert(!(mat->matriz[i] == NULL), "Ponteiro não alocado");
+        erroAssert(!(mat->matriz[i] == NULL), "Ponteiro nao foi alocado");
     }
 }
 
@@ -68,7 +68,7 @@ void inicializaMatrizAleatoria(mat_tipo * mat)
     }
 }
 
-void imprimeMatriz(mat_tipo * mat, FILE * arquivo)
+void imprimeMatrizNoArquivo(mat_tipo * mat, FILE * arquivo)
 // Descricao: imprime a matriz no arquivo de saída
 // Entrada: mat, arquivo
 // Saida: impressão no arquivo especificado
@@ -83,7 +83,9 @@ void imprimeMatriz(mat_tipo * mat, FILE * arquivo)
             fprintf(arquivo, "%lf ", mat->matriz[i][j]);
             leMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
         }
-        fprintf(arquivo, "\n");
+        if(i != mat->linhas - 1){
+            fprintf(arquivo, "\n");
+        }
     }   
 }
 
@@ -166,7 +168,7 @@ void multiplicaMatrizes(mat_tipo * a, mat_tipo * b, mat_tipo * c)
 // Saida: c
 {
     // verifica a compatibilidade das dimensoes 
-    erroAssert(a->colunas == b->linhas, "Dimensoes incompativeis para multiplicação");
+    erroAssert(a->colunas == b->linhas, "Dimensoes incompativeis para multiplicacao");
 
     // cria e inicializa a matriz c
     criaMatriz(c, a->linhas, b->colunas);
@@ -193,7 +195,7 @@ void transpoeMatriz(mat_tipo * a)
 {
     // aloca espaço, cria e inicializa uma matriz auxiliar aux
     mat_tipo * aux = malloc (sizeof(mat_tipo));
-    erroAssert(!(aux == NULL), "Ponteiro não alocado");
+    erroAssert(!(aux == NULL), "Ponteiro nao alocado");
     criaMatriz(aux, a->colunas, a->linhas);
     inicializaMatrizNula(aux);
     
@@ -214,12 +216,12 @@ void transpoeMatriz(mat_tipo * a)
 }
 
 void destroiMatriz(mat_tipo * a)
-// Descricao: destroi a matriz a, que se torna inacessível
+// Descricao: destroi a matriz a, que se torna inacessível, evitando vazamento de memória
 // Entrada: a
 // Saida: a
 {
     // apenas um aviso se a matriz for destruida mais de uma vez
-    avisoAssert(a->matriz != NULL, "Matriz já foi destruida");
+    avisoAssert(a->matriz != NULL, "Matriz ja foi destruida");
 
     // libera o espaço alocado para as colunas da matriz
     for (int i = 0; i < a->linhas; i++){

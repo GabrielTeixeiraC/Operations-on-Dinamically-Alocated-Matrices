@@ -3,6 +3,7 @@
         "random": "cpp",
         "limits": "cpp",
         "iostream": "cpp",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "stdio.h": "c"
     }
 }
