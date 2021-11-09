@@ -20,8 +20,7 @@
 // variavel estatica de registro de acessos
 static memlog_tipo ml;
 
-void clkDifMemLog(struct timespec t1, struct timespec t2, 
-                   struct timespec * res)
+void clkDifMemLog(struct timespec t1, struct timespec t2, struct timespec * res)
 // Descricao: calcula a diferenca entre t2 e t1, que e armazenada em res
 // Entrada: t1, t2
 // Saida: res
@@ -61,8 +60,7 @@ int iniciaMemLog(char * nome)
   ml.fase = 0;
 
   // imprime registro inicial
-  int retprint = fprintf(ml.log,"I %ld %ld.%ld\n", 
-                         ml.count,tp.tv_sec,tp.tv_nsec);
+  int retprint = fprintf(ml.log,"I %ld %ld.%ld\n", ml.count,tp.tv_sec,tp.tv_nsec);
   erroAssert(retprint>=0,"Nao foi possivel escrever registro");
   return result;
 }

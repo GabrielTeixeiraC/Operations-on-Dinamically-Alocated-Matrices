@@ -26,6 +26,8 @@ void criaMatriz(mat_tipo * mat, int linhas, int colunas)
     // inicializa as dimensões da matriz
     mat->linhas = linhas;
     mat->colunas = colunas;
+    escreveMemLog( (long int) (&(mat->linhas)), sizeof(int));
+    escreveMemLog( (long int) (&(mat->colunas)), sizeof(int));
 
     // aloca a memória necessária para os ponteiros para double* 
     mat->matriz = malloc(linhas * sizeof(double*));
@@ -78,7 +80,7 @@ void imprimeMatriz(mat_tipo * mat, FILE * arquivo)
     // imprime as linhas e colunas
     for (int i = 0; i < mat->linhas; i++){
         for(int j = 0; j < mat->colunas; j++){
-            fprintf(arquivo, "%.2lf ", mat->matriz[i][j]);
+            fprintf(arquivo, "%lf ", mat->matriz[i][j]);
             leMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
         }
         fprintf(arquivo, "\n");
@@ -120,8 +122,10 @@ void copiaMatriz(mat_tipo * src, mat_tipo * dst)
 {
     // cria novamente a matriz dst para ajustar as suas dimensoes
     criaMatriz(dst, src->linhas, src->colunas);
+
     // inicializa a matriz dst como nula
     inicializaMatrizNula(dst);
+    
     // copia os elementos da matriz src
     for (int i = 0; i < src->linhas; i++){
         for (int j = 0; j < src->colunas; j++){

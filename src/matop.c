@@ -21,7 +21,7 @@
 // variaveis globais para opcoes
 static int opescolhida;
 int regmem, opcaoP, opcao2;
-char nomeArquivoMatriz1[100], nomeArquivoMatriz2[100], nomeArquivoSaida[100], lognome[100];
+char nomeArquivoMatriz1[100], nomeArquivoMatriz2[100], nomeArquivoSaida[100], lognome[100], gpdatnome[100] = "valores.txt";
 FILE *arquivoSaida;
 
 void uso()
@@ -115,7 +115,6 @@ void parse_args(int argc,char ** argv)
         
 }
 
-
 void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
 // Descricao: le os dados do arquivo "nomeDoArquivoPonteiro" e cria uma matriz mat com esses dados
 // Entrada: nomeDoArquivoPonteiro, mat
@@ -150,6 +149,28 @@ void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
     fclose(arquivo);
 }
 
+void escreveGPDAT(const char * nomeDoArquivoLogPonteiro, const char * nomeDoArquivoGPDATPonteiro){
+    FILE * arquivoLog;
+    FILE * arquivoGPDAT;
+    char nomeDoArquivoLog[100] = "";
+    char nomeDoArquivoGPDAT[100] = "";
+    strcpy(nomeDoArquivoLog, nomeDoArquivoLogPonteiro);
+    strcpy(nomeDoArquivoGPDAT, nomeDoArquivoGPDATPonteiro);
+    arquivoLog = fopen(nomeDoArquivoLog, "rt");
+    erroAssert(arquivoLog != NULL, "Arquivo de Log não pôde ser aberto");
+    arquivoGPDAT = fopen(nomeDoArquivoGPDAT, "at");
+    erroAssert(arquivoGPDAT != NULL, "Arquivo GPDAT não pôde ser aberto");
+    double tempoInicio, tempoFinal;
+    fscanf(arquivoLog, "%*c %*d %lf \n", &tempoInicio);
+    fscanf(arquivoLog, "%*c %*d %lf", &tempoFinal);
+    double resultado = tempoFinal - tempoInicio;
+    fprintf(arquivoGPDAT, "%lf ", resultado);
+    fclose(arquivoGPDAT);
+    fclose(arquivoLog);
+}
+
+
+
 int main(int argc, char ** argv)
 // Descricao: programa principal para execucao de operacoes de matrizes 
 // Entrada: argc e argv
@@ -165,7 +186,11 @@ int main(int argc, char ** argv)
     iniciaMemLog(lognome);
 
     // ativar registro de acesso
-    ativaMemLog();
+    if (regmem == 1){
+        ativaMemLog();
+    }
+    else desativaMemLog();
+    
     
     // abre arquivo de resultado
     arquivoSaida = fopen(nomeArquivoSaida, "wt");
@@ -212,5 +237,8 @@ int main(int argc, char ** argv)
     fclose(arquivoSaida);
 
     // conclui registro de acesso
-    return finalizaMemLog();
+    finalizaMemLog();
+    escreveGPDAT(lognome, gpdatnome);
+    return 0;
+
 }

@@ -10,7 +10,6 @@
 #---------------------------------------------------------------------
 
 CC = gcc
-CFLAGS = -Wall -c
 LIBS = -lm
 SRC = src
 OBJ = obj
@@ -18,14 +17,14 @@ INC = include
 BIN = bin
 OBJS = $(OBJ)/matop.o $(OBJ)/mat.o $(OBJ)/memlog.o
 HDRS = $(INC)/mat.h $(INC)/memlog.h $(INC)/msgassert.h
-CFLAGS = -Wall -c -I$(INC) -g
+CFLAGS = -Wall -c -I$(INC) 
 
 EXE = $(BIN)/matop
 
 all: $(EXE)
-	$(EXE) -s -1 $(BIN)/m1.txt -2 $(BIN)/m2.txt -p $(BIN)/arq.txt -o $(BIN)/res.txt
-	$(EXE) -m -1 $(BIN)/m1.txt -2 $(BIN)/m2.txt -p $(BIN)/arq.txt -o $(BIN)/res.txt
-	$(EXE) -t -1 $(BIN)/m1.txt -p $(BIN)/arq.txt -o $(BIN)/res.txt
+	$(EXE) -s -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
+	$(EXE) -m -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
+	$(EXE) -t -1 matrizes/250x250/0.in -p $(BIN)/arq.txt -o $(BIN)/res.txt
 
 $(BIN)/matop: $(OBJS)
 	$(CC) -o $(BIN)/matop $(OBJS) $(LIBS)
