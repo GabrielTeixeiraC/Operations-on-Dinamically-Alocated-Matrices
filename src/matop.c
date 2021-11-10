@@ -155,6 +155,7 @@ void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
     for (int i = 0; i < mat->linhas; i++){
         for (int j = 0; j < mat->colunas; j++){
             fscanf(arquivo, "%lf", &mat->matriz[i][j]);
+            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
         }
     }    
 
@@ -194,7 +195,10 @@ int main(int argc, char ** argv)
 	        // matriz c, matriz c é impressa e todas as matrizes sao destruidas
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
             leMatrizDoArquivo(nomeArquivoMatriz2, &b);
+            defineFaseMemLog(1);
             somaMatrizes(&a, &b, &c);
+
+            defineFaseMemLog(2);
             imprimeMatrizNoArquivo(&c, arquivoSaida);
             destroiMatriz(&a);
             destroiMatriz(&b);
@@ -205,8 +209,11 @@ int main(int argc, char ** argv)
 	        // matriz c, matriz c é impressa e todas as matrizes sao destruidas
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
             leMatrizDoArquivo(nomeArquivoMatriz2, &b);
+            defineFaseMemLog(1);
             multiplicaMatrizes(&a,&b,&c);
+            defineFaseMemLog(2);
             imprimeMatrizNoArquivo(&c, arquivoSaida);
+
             destroiMatriz(&a);
             destroiMatriz(&b);
             destroiMatriz(&c);
@@ -214,8 +221,12 @@ int main(int argc, char ** argv)
         case OPTRANSPOR:
             // recebe de arquivo matriz a, que é transposta, impressa e destruida
             leMatrizDoArquivo(nomeArquivoMatriz1, &a);
+            defineFaseMemLog(1);
             transpoeMatriz(&a);
+            
+            defineFaseMemLog(2);
             imprimeMatrizNoArquivo(&a, arquivoSaida);
+            
             destroiMatriz(&a);
             break;
         default:

@@ -26,8 +26,6 @@ void criaMatriz(mat_tipo * mat, int linhas, int colunas)
     // inicializa as dimensões da matriz
     mat->linhas = linhas;
     mat->colunas = colunas;
-    escreveMemLog( (long int) (&(mat->linhas)), sizeof(int));
-    escreveMemLog( (long int) (&(mat->colunas)), sizeof(int));
 
     // aloca a memória necessária para os ponteiros para double* 
     mat->matriz = malloc(linhas * sizeof(double*));
@@ -202,8 +200,8 @@ void transpoeMatriz(mat_tipo * a)
     for (int i = 0; i < a->linhas; i++){
         for (int j = 0; j < a->colunas; j++){
             aux->matriz[j][i] = a->matriz[i][j];
-            escreveMemLog( (long int) (&(a->matriz[i][j])), sizeof(double));
-            escreveMemLog( (long int) (&(a->matriz[j][i])), sizeof(double));
+            leMemLog( (long int) (&(a->matriz[i][j])), sizeof(double));
+            escreveMemLog( (long int) (&(aux->matriz[i][j])), sizeof(double));
         }
     }
 
