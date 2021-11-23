@@ -105,29 +105,24 @@ void parse_args(int argc,char ** argv)
         // verificação de existência dos nomes dos arquivos obrigatórios
         erroAssert(strlen(nomeArquivoMatriz1) > 0, "matop - nome de arquivo da matriz 1 tem que ser definido");
         erroAssert(strlen(nomeArquivoSaida) > 0, "matop - nome de arquivo do resultado tem que ser definido");
+        erroAssert(strlen(lognome) > 0, "matop - nome de arquivo de registro de acesso tem que ser definido");
 
         // verificação do tamanho máximo dos nomes dos arquivos necessários
         erroAssert(strlen(nomeArquivoMatriz1) <= 100, "matop - nome de arquivo da matriz 1 excede o limite de caracteres");
         erroAssert(strlen(nomeArquivoSaida) <= 100, "matop - nome de arquivo do resultado excede o limite de caracteres");
+        erroAssert(strlen(lognome) <= 100, "matop - nome de arquivo de registro de acesso excede o limite de caracteres");
         
         // verificação das opções não obrigatórias
-        if (opcao2){
+        if (opescolhida == OPSOMAR || opescolhida == OPMULTIPLICAR){
             // verificação de existência do nome do arquivo da matriz 2
             erroAssert(strlen(nomeArquivoMatriz2) > 0, "matop - nome de arquivo da matriz 2 tem que ser definido");
 
             // verificação do tamanho máximo do nome do arquivo da matriz 2
             erroAssert(strlen(nomeArquivoMatriz2) <= 100, "matop - nome de arquivo da matriz 2 excede o limite de caracteres");
         }
-        if (opcaoP){
-            // verificação de existência do nome do arquivo de registro
-            erroAssert(strlen(lognome) > 0, "matop - nome de arquivo de registro de acesso tem que ser definido");
-
-            // verificação do tamanho máximo do nome do arquivo de registro
-            erroAssert(strlen(lognome) <= 100, "matop - nome de arquivo de registro de acesso excede o limite de caracteres");
-        }
 }
 
-void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
+void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat, int id)
 // Descricao: le os dados do arquivo "nomeDoArquivoPonteiro" e cria uma matriz mat com esses dados
 // Entrada: nomeDoArquivoPonteiro, mat
 // Saida: mat
@@ -149,17 +144,17 @@ void leMatrizDoArquivo(const char * nomeDoArquivoPonteiro, mat_tipo * mat)
     
     // cria matriz com o numero de linhas e colunas especificado no arquivo
     fscanf(arquivo, "%d %d", &linhas, &colunas);
-    criaMatriz(mat, linhas, colunas);
+    criaMatriz(mat, linhas, colunas, id);
 
     // preenche as linhas e colunas de mat com os dados do arquivo
     for (int i = 0; i < mat->linhas; i++){
         for (int j = 0; j < mat->colunas; j++){
             fscanf(arquivo, "%lf", &mat->matriz[i][j]);
-            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
+            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double), mat->id);
         }
     }    
 
-    // fecha arquivo de leitura
+    // fecha arquivo de leituras
     fclose(arquivo);
 }
 
@@ -193,13 +188,23 @@ int main(int argc, char ** argv)
         case OPSOMAR:
             // recebe de arquivos matrizes a e b, que sao somadas para a 
 	        // matriz c, matriz c é impressa e todas as matrizes sao destruidas
-            leMatrizDoArquivo(nomeArquivoMatriz1, &a);
-            leMatrizDoArquivo(nomeArquivoMatriz2, &b);
+            defineFaseMemLog(0);
+            leMatrizDoArquivo(nomeArquivoMatriz1, &a, 0);
+            leMatrizDoArquivo(nomeArquivoMatriz2, &b, 1);
+            // inicializa a matriz c garantindo a compatibilidade das dimensoes
+            criaMatriz(&c, a.linhas, a.colunas, 2);
+            inicializaMatrizNula(&c);
+            
             defineFaseMemLog(1);
+            acessaMatriz(&a);
+            acessaMatriz(&b);
+            acessaMatriz(&c);
             somaMatrizes(&a, &b, &c);
 
             defineFaseMemLog(2);
+            acessaMatriz(&c);
             imprimeMatrizNoArquivo(&c, arquivoSaida);
+
             destroiMatriz(&a);
             destroiMatriz(&b);
             destroiMatriz(&c);
@@ -207,11 +212,22 @@ int main(int argc, char ** argv)
         case OPMULTIPLICAR:
             // recebe de arquivos matrizes a e b, que sao multiplicadas para a 
 	        // matriz c, matriz c é impressa e todas as matrizes sao destruidas
-            leMatrizDoArquivo(nomeArquivoMatriz1, &a);
-            leMatrizDoArquivo(nomeArquivoMatriz2, &b);
+            defineFaseMemLog(0);
+            leMatrizDoArquivo(nomeArquivoMatriz1, &a, 0);
+            leMatrizDoArquivo(nomeArquivoMatriz2, &b, 1);
+            // cria e inicializa a matriz c
+            criaMatriz(&c, a.linhas, b.colunas, 2);
+            inicializaMatrizNula(&c);
+
+
             defineFaseMemLog(1);
-            multiplicaMatrizes(&a,&b,&c);
+            acessaMatriz(&a);
+            acessaMatriz(&b);
+            acessaMatriz(&c);
+            multiplicaMatrizes(&a, &b, &c);
+
             defineFaseMemLog(2);
+            acessaMatriz(&c);
             imprimeMatrizNoArquivo(&c, arquivoSaida);
 
             destroiMatriz(&a);
@@ -220,11 +236,15 @@ int main(int argc, char ** argv)
             break;
         case OPTRANSPOR:
             // recebe de arquivo matriz a, que é transposta, impressa e destruida
-            leMatrizDoArquivo(nomeArquivoMatriz1, &a);
+            defineFaseMemLog(0);
+            leMatrizDoArquivo(nomeArquivoMatriz1, &a, 0);
+
             defineFaseMemLog(1);
+            acessaMatriz(&a);
             transpoeMatriz(&a);
             
             defineFaseMemLog(2);
+            acessaMatriz(&a);
             imprimeMatrizNoArquivo(&a, arquivoSaida);
             
             destroiMatriz(&a);

@@ -1,0 +1,15 @@
+bin/matop -m -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/0.in -p bin/arq.txt -o bin/res.txt
+bin/matop -m -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/1.in -p bin/arq.txt -o bin/res.txt
+bin/matop -m -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/2.in -p bin/arq.txt -o bin/res.txt
+bin/matop -m -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/3.in -p bin/arq.txt -o bin/res.txt
+bin/matop -m -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/4.in -p bin/arq.txt -o bin/res.txt
+bin/matop -s -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/0.in -p bin/arq.txt -o bin/res.txt
+bin/matop -s -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/1.in -p bin/arq.txt -o bin/res.txt
+bin/matop -s -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/2.in -p bin/arq.txt -o bin/res.txt
+bin/matop -s -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/3.in -p bin/arq.txt -o bin/res.txt
+bin/matop -s -1 matrizes/1000x1000/0.in -2 matrizes/1000x1000/4.in -p bin/arq.txt -o bin/res.txt
+bin/matop -t -1 matrizes/1000x1000/0.in -p bin/arq.txt -o bin/res.txt
+bin/matop -t -1 matrizes/1000x1000/1.in -p bin/arq.txt -o bin/res.txt
+bin/matop -t -1 matrizes/1000x1000/2.in -p bin/arq.txt -o bin/res.txt
+bin/matop -t -1 matrizes/1000x1000/3.in -p bin/arq.txt -o bin/res.txt
+bin/matop -t -1 matrizes/1000x1000/4.in -p bin/arq.txt -o bin/res.txt

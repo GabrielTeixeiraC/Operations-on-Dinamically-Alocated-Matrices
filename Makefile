@@ -16,17 +16,17 @@ OBJ = obj
 INC = include
 BIN = bin
 TMPDIR = tmp
-TMP = $(TMPDIR)/res.txt $(TMPDIR)/log.txt
+TMP = $(TMPDIR)/res.out $(TMPDIR)/log.out
 OBJS = $(OBJ)/matop.o $(OBJ)/mat.o $(OBJ)/memlog.o
 HDRS = $(INC)/mat.h $(INC)/memlog.h $(INC)/msgassert.h
-CFLAGS = -Wall -c -I$(INC) 
+CFLAGS = -Wall -g -c -I$(INC) 
 
 EXE = $(BIN)/matop
 
 all: $(EXE)
-	$(EXE) -s -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
-	$(EXE) -m -1 matrizes/250x250/0.in -2 matrizes/250x250/1.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
-	$(EXE) -t -1 matrizes/250x250/0.in -p $(TMPDIR)/log.txt -o $(TMPDIR)/res.txt
+	$(EXE) -s -1 matrizes/10x10/0.in -2 matrizes/10x10/1.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
+	$(EXE) -m -1 matrizes/10x10/0.in -2 matrizes/10x10/1.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
+	$(EXE) -t -1 matrizes/10x10/0.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
 
 $(BIN)/matop: $(OBJS)
 	$(CC) -o $(BIN)/matop $(OBJS) $(LIBS)

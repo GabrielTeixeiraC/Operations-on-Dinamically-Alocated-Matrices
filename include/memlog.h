@@ -25,8 +25,8 @@ int iniciaMemLog(char * nome);
 int ativaMemLog();
 int desativaMemLog();
 int defineFaseMemLog(int f);
-int leMemLog(long int pos, long int tam);
-int escreveMemLog(long int pos, long int tam);
+int leMemLog(long int pos, long int tam, int id);
+int escreveMemLog(long int pos, long int tam, int id);
 int finalizaMemLog();
 
 #endif

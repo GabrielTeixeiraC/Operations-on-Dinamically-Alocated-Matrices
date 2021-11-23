@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "/home/gabriel/ED/TP/bin/matop",
-            "args": ["-m", "-1", "0.in", "-2", "1.in", "-p", "arq.txt", "-o", "1.in" ],
+            "args": ["-s", "-1", "0.in", "-2", "1.in", "-p", "log.out", "-o", "res.out" ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

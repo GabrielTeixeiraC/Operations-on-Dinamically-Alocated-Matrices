@@ -92,54 +92,56 @@ int defineFaseMemLog(int f)
   return f;
 }
 
-int leMemLog(long int pos, long int tam)
-// Descricao: registra acesso de leitura de tam bytes na posicao pos 
-// Entrada: pos,tam
+int leMemLog(long int pos, long int tam, int id)
+// Descricao: registra acesso de leitura de tam bytes na posicao pos
+// Entrada: pos,tam, id
 // Saida: resultado da obtencao do relogio
-{
-  // verifica se registro esta ativo
-  if (ml.ativo == MLINATIVO) return 0;
+{ 
+    // verifica se registro esta ativo
+    if (ml.ativo == MLINATIVO) return 0;
 
-  // captura tempo atual
-  struct timespec tp, tdif;
-  int result = clock_gettime(ml.clk_id,&tp);
+    // captura tempo atual
+    struct timespec tp, tdif;
+    int result = clock_gettime(ml.clk_id,&tp);
 
-  // calcula a diferencao com tempo inicial, para economia de armazenamento
-  clkDifMemLog(ml.inittime,tp,&tdif);
+    // calcula a diferencao com tempo inicial, para economia de armazenamento
+    clkDifMemLog(ml.inittime,tp,&tdif);
 
-  // atualiza contador
-  ml.count++;
+    // atualiza contador
+    ml.count++;
 
-  // imprime registro
-  int retprint = fprintf(ml.log,"L %d %ld %ld.%ld %ld %ld\n",
-          ml.fase, ml.count, tdif.tv_sec, tdif.tv_nsec, pos, tam);
-  erroAssert(retprint>=0,"Nao foi possivel escrever registro");
-  return result;
+    // imprime registro
+    int retprint = fprintf(ml.log,"L %d %ld %d %ld.%.9ld %ld %ld\n",
+    ml.fase, ml.count, id, tdif.tv_sec, tdif.tv_nsec, pos, tam);
+    
+    erroAssert(retprint>=0,"Nao foi possivel escrever registro");
+    return result;
 }
 
-int escreveMemLog(long int pos, long int tam)
+int escreveMemLog(long int pos, long int tam, int id)
 // Descricao: registra acesso de escrita de tam bytes na posicao pos
-// Entrada: pos, tam
+// Entrada: pos, tam, id
 // Saida: resultado da obtencao do relogio
-{
-  // verifica se registro esta ativo
-  if (ml.ativo == MLINATIVO) return 0;
+{ 
+    // verifica se registro esta ativo
+    if (ml.ativo == MLINATIVO) return 0;
 
-  // captura tempo atual
-  struct timespec tp,tdif;
-  int result = clock_gettime(ml.clk_id,&tp);
+    // captura tempo atual
+    struct timespec tp,tdif;
+    int result = clock_gettime(ml.clk_id, &tp);
 
-  // calcula a diferencao com tempo inicial, para economia de armazenamento
-  clkDifMemLog(ml.inittime,tp,&tdif);
+    // calcula a diferenca com tempo inicial, para economia de armazenamento
+    clkDifMemLog(ml.inittime, tp, &tdif);
 
-  // atualiza contador
-  ml.count++;
+    // atualiza contador
+    ml.count++;
 
-  // imprime registro
-  int retprint = fprintf(ml.log,"E %d %ld %ld.%ld %ld %ld\n",
-          ml.fase, ml.count, tdif.tv_sec, tdif.tv_nsec, pos, tam);
-  erroAssert(retprint>=0,"Nao foi possivel escrever registro");
-  return result;
+    // imprime registro
+    int retprint = fprintf(ml.log,"E %d %ld %d %ld.%.9ld %ld %ld\n",
+    ml.fase, ml.count, id, tdif.tv_sec, tdif.tv_nsec, pos, tam);
+
+    erroAssert(retprint>=0,"Nao foi possivel escrever registro");
+    return result;
 }
 
 int finalizaMemLog()

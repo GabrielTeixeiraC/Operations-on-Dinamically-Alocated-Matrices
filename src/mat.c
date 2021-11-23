@@ -14,7 +14,7 @@
 
 #define INITRANDOMRANGE 10
 
-void criaMatriz(mat_tipo * mat, int linhas, int colunas)
+void criaMatriz(mat_tipo * mat, int linhas, int colunas, int id)
 // Descricao: cria matriz com dimensoes tx X ty
 // Entrada: mat, tx, ty
 // Saida: mat
@@ -26,6 +26,7 @@ void criaMatriz(mat_tipo * mat, int linhas, int colunas)
     // inicializa as dimensões da matriz
     mat->linhas = linhas;
     mat->colunas = colunas;
+    mat->id = id;
 
     // aloca a memória necessária para os ponteiros para double* 
     mat->matriz = malloc(linhas * sizeof(double*));
@@ -47,7 +48,7 @@ void inicializaMatrizNula(mat_tipo * mat)
     for (int i = 0; i < mat->linhas; i++){
         for (int j = 0; j < mat->colunas; j++){
             mat->matriz[i][j] = 0;
-            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
+            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double), mat->id);
         }
     }
 }
@@ -61,9 +62,24 @@ void inicializaMatrizAleatoria(mat_tipo * mat)
     for (int i = 0; i < mat->linhas; i++){
         for (int j = 0; j < mat->colunas; j++){
             mat->matriz[i][j] = drand48() * INITRANDOMRANGE;
-            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
+            escreveMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double), mat->id);
         }
     }
+}
+
+double acessaMatriz(mat_tipo * mat){
+// Descricao: acessa mat para fins de registro de acesso
+// Entrada: mat
+// Saida: mat
+    double aux, s = 0.0;
+    for (int i = 0; i < mat->linhas; i++){
+        for(int j = 0; j < mat->colunas; j++){
+            aux = mat->matriz[i][j];
+            s = s + aux;
+            leMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double), mat->id);
+        }
+    }
+    return s; // apenas para evitar que acesso seja eliminado
 }
 
 void imprimeMatrizNoArquivo(mat_tipo * mat, FILE * arquivo)
@@ -79,7 +95,7 @@ void imprimeMatrizNoArquivo(mat_tipo * mat, FILE * arquivo)
     for (int i = 0; i < mat->linhas; i++){
         for(int j = 0; j < mat->colunas; j++){
             fprintf(arquivo, "%lf ", mat->matriz[i][j]);
-            leMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double));
+            leMemLog( (long int) (&(mat->matriz[i][j])), sizeof(double), mat->id);
         }
         if(i != mat->linhas - 1){
             fprintf(arquivo, "\n");
@@ -98,7 +114,7 @@ void escreveElemento(mat_tipo * mat, int x, int y, double valor)
 
     // atribui o valor ao elemento (x, y) de mat
     mat->matriz[x][y] = valor;
-    escreveMemLog( (long int) (&(mat->matriz[x][y])), sizeof(double));
+    escreveMemLog( (long int) (&(mat->matriz[x][y])), sizeof(double), mat->id);
 }
 
 double leElemento(mat_tipo * mat, int x, int y)
@@ -111,17 +127,17 @@ double leElemento(mat_tipo * mat, int x, int y)
     erroAssert(!( (y < 0) || (y >= mat->colunas) ), "Indice invalido");
 
     // retorna o elemento (x, y) de mat
-    leMemLog( (long int) (&(mat->matriz[x][y])), sizeof(double));
+    leMemLog( (long int) (&(mat->matriz[x][y])), sizeof(double), mat->id);
     return mat->matriz[x][y];
 }
 
-void copiaMatriz(mat_tipo * src, mat_tipo * dst)
+void copiaMatriz(mat_tipo * src, mat_tipo * dst, int dst_id)
 // Descricao: faz uma copia de src em dst
 // Entrada: src
 // Saida: dst
 {
     // cria novamente a matriz dst para ajustar as suas dimensoes
-    criaMatriz(dst, src->linhas, src->colunas);
+    criaMatriz(dst, src->linhas, src->colunas, dst->id);
 
     // inicializa a matriz dst como nula
     inicializaMatrizNula(dst);
@@ -130,8 +146,8 @@ void copiaMatriz(mat_tipo * src, mat_tipo * dst)
     for (int i = 0; i < src->linhas; i++){
         for (int j = 0; j < src->colunas; j++){
             dst->matriz[i][j] = src->matriz[i][j];
-            leMemLog( (long int) (&(src->matriz[i][j])), sizeof(double));
-            escreveMemLog( (long int) (&(dst->matriz[i][j])), sizeof(double));
+            leMemLog( (long int) (&(src->matriz[i][j])), sizeof(double), src->id);
+            escreveMemLog( (long int) (&(dst->matriz[i][j])), sizeof(double), dst->id);
         }
     }
 }
@@ -145,17 +161,13 @@ void somaMatrizes(mat_tipo * a, mat_tipo * b, mat_tipo * c)
     erroAssert(a->linhas == b->linhas, "Dimensoes incompativeis");
     erroAssert(a->colunas == b->colunas, "Dimensoes incompativeis");
 
-    // inicializa a matriz c garantindo a compatibilidade das dimensoes
-    criaMatriz(c, a->linhas, a->colunas);
-    inicializaMatrizNula(c);
-
     // faz a soma elemento a elemento
     for (int i = 0; i < c->linhas; i++){
         for (int j = 0; j < c->colunas; j++){
             c->matriz[i][j] = a->matriz[i][j] + b->matriz[i][j];
-            leMemLog( (long int) (&(a->matriz[i][j])), sizeof(double));
-            leMemLog( (long int) (&(b->matriz[i][j])), sizeof(double));
-            escreveMemLog( (long int) (&(c->matriz[i][j])), sizeof(double));
+            leMemLog( (long int) (&(a->matriz[i][j])), sizeof(double), a->id);
+            leMemLog( (long int) (&(b->matriz[i][j])), sizeof(double), b->id);
+            escreveMemLog( (long int) (&(c->matriz[i][j])), sizeof(double), c->id);
         }
     }
 }
@@ -168,18 +180,14 @@ void multiplicaMatrizes(mat_tipo * a, mat_tipo * b, mat_tipo * c)
     // verifica a compatibilidade das dimensoes 
     erroAssert(a->colunas == b->linhas, "Dimensoes incompativeis para multiplicacao");
 
-    // cria e inicializa a matriz c
-    criaMatriz(c, a->linhas, b->colunas);
-    inicializaMatrizNula(c);
-
     // realiza a multiplicacao de matrizes
     for (int i = 0; i < c->linhas; i++){
         for (int j = 0; j < c->colunas; j++){
             for (int k = 0; k < a->colunas; k++){
                 c->matriz[i][j] += a->matriz[i][k] * b->matriz[k][j];
-                leMemLog( (long int) (&(a->matriz[i][k])), sizeof(double));
-                leMemLog( (long int) (&(b->matriz[k][j])), sizeof(double));
-                escreveMemLog( (long int) (&(c->matriz[i][j])), sizeof(double));                
+                leMemLog( (long int) (&(a->matriz[i][k])), sizeof(double), a->id);
+                leMemLog( (long int) (&(b->matriz[k][j])), sizeof(double), b->id);
+                escreveMemLog( (long int) (&(c->matriz[i][j])), sizeof(double), c->id);                
             }     
         }
     }
@@ -193,20 +201,20 @@ void transpoeMatriz(mat_tipo * a)
     // aloca espaço, cria e inicializa uma matriz auxiliar aux
     mat_tipo * aux = malloc (sizeof(mat_tipo));
     erroAssert(!(aux == NULL), "Ponteiro nao alocado");
-    criaMatriz(aux, a->colunas, a->linhas);
+    criaMatriz(aux, a->colunas, a->linhas, 3);
     inicializaMatrizNula(aux);
     
     // copia os elementos da matriz a(m x n) para a matriz aux(n x m)
     for (int i = 0; i < a->linhas; i++){
         for (int j = 0; j < a->colunas; j++){
             aux->matriz[j][i] = a->matriz[i][j];
-            leMemLog( (long int) (&(a->matriz[i][j])), sizeof(double));
-            escreveMemLog( (long int) (&(aux->matriz[i][j])), sizeof(double));
+            leMemLog( (long int) (&(a->matriz[i][j])), sizeof(double), a->id);
+            escreveMemLog( (long int) (&(aux->matriz[i][j])), sizeof(double), aux->id);
         }
     }
 
     // copia os elementos da matriz aux para a matriz a transposta
-    copiaMatriz(aux, a);
+    copiaMatriz(aux, a, a->id);
 
     // destroi a matriz aux, tornando-a inacessível
     destroiMatriz(aux);
