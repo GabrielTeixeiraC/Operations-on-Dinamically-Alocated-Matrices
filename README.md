@@ -23,7 +23,7 @@ The program works from the CLI, through the following commmands:
 
     '-l' Sets whether all memory accesses made by the leMemLog and escreveMemLog functions should be recorded in the performance log file.
 
-    '-p <file>' Sets the file path where performance logs will be printed (optional)
+    '-p <file>' Sets the file path where performance logs will be printed
 
 ## Example:
 ### Addition
