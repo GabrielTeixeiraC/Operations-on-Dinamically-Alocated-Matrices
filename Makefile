@@ -23,22 +23,31 @@ CFLAGS = -Wall -g -c -I$(INC)
 
 EXE = $(BIN)/matop
 
-all: $(EXE)
+all: $(EXE) | $(TMPDIR)
 	$(EXE) -s -1 matrizes/10x10/0.in -2 matrizes/10x10/1.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
 	$(EXE) -m -1 matrizes/10x10/0.in -2 matrizes/10x10/1.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
 	$(EXE) -t -1 matrizes/10x10/0.in -p $(TMPDIR)/log.out -o $(TMPDIR)/res.out
 
-$(BIN)/matop: $(OBJS)
+$(BIN)/matop: $(OBJS) | $(BIN)
 	$(CC) -o $(BIN)/matop $(OBJS) $(LIBS)
 
-$(OBJ)/matop.o: $(HDRS) $(SRC)/matop.c
+$(OBJ)/matop.o: $(HDRS) $(SRC)/matop.c | $(OBJ)
 	$(CC) $(CFLAGS) -o $(OBJ)/matop.o $(SRC)/matop.c
 
-$(OBJ)/mat.o: $(HDRS) $(SRC)/mat.c
+$(OBJ)/mat.o: $(HDRS) $(SRC)/mat.c | $(OBJ)
 	$(CC) $(CFLAGS) -o $(OBJ)/mat.o $(SRC)/mat.c 
 
-$(OBJ)/memlog.o: $(HDRS) $(SRC)/memlog.c
+$(OBJ)/memlog.o: $(HDRS) $(SRC)/memlog.c | $(OBJ)
 	$(CC) $(CFLAGS) -o $(OBJ)/memlog.o $(SRC)/memlog.c 
 	
+$(OBJ):
+	mkdir $(OBJ)
+
+$(BIN):
+	mkdir $(BIN)
+
+$(TMPDIR):
+	mkdir $(TMPDIR)
+
 clean:
 	rm $(EXE) $(OBJS) $(TMP)
