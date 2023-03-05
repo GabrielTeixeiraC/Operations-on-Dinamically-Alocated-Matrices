@@ -7,6 +7,8 @@ To compile the program, run:
 ## Usage:
 The program works from the CLI, through the following commmands:  
 
+    ./bin/matop <operation> -1 <matrix 1 file> -2 <matrix 2 file> -o <output file> -p <log file> -l 
+    
     '-s' Sum matrices passed through the command line.
 
     '-m' Multiply matrices passed through the command line
