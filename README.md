@@ -1,9 +1,12 @@
 # Operations on Dinamically Alocated Matrices
 This program implements matrix addition, multiplication and transpose operations through dinamically alocated matrices. Matrix data is read from files and output is printed to a specified file.
+## Compilation:
+To compile the program, run:
 
+    make all
+## Usage:
 The program works from the CLI, through the following commmands:  
 
-## Usage:
     '-s' Sum matrices passed through the command line.
 
     '-m' Multiply matrices passed through the command line
