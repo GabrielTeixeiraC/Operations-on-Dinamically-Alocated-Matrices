@@ -1,7 +1,10 @@
 # Operations on Dinamically Alocated Matrices
 This program implements matrix addition, multiplication and transpose operations through dinamically alocated matrices. Matrix data is read from files and output is printed to a specified file.
+
+All data structures were implemented without using the STL or similar libraries.
+
 ## Compilation:
-To compile the program, run:
+To compile the program, navigate to the directory containing the source code and run the following command:
 
     make all
 ## Usage:
@@ -29,14 +32,14 @@ The program works from the CLI, through the following commmands:
 ### Addition
   Adds matrix 0.in and 1.in, outputs the result to res.out and outputs the logs to log.out if the -l flag is set. 
   
-    bin/matop -s -1 matrizes/5x5/0.in -2 matrizes/5x5/1.in -o tmp/res.out -p tmp/log.out -l 
+    ./bin/matop -s -1 ./matrizes/5x5/0.in -2 ./matrizes/5x5/1.in -o ./tmp/res.out -p ./tmp/log.out -l 
 
 ### Multiplication
   Multiplies matrix 0.in and 1.in, outputs the result to res.out and outputs the logs to log.out if the -l flag is set. 
   
-    bin/matop -m -1 matrizes/5x5/0.in -2 matrizes/5x5/1.in -o tmp/res.out -p tmp/log.out -l
+    ./bin/matop -m -1 ./matrizes/5x5/0.in -2 ./matrizes/5x5/1.in -o ./tmp/res.out -p ./tmp/log.out -l
   
 ### Transpose
   Transposes matrix 0.in, outputs the result to res.out and outputs the logs to log.out if the -l flag is set. 
 
-    bin/matop -t -1 matrizes/5x5/0.in -o tmp/res.out -p tmp/log.out -l
+    ./bin/matop -t -1 ./matrizes/5x5/0.in -o ./tmp/res.out -p ./tmp/log.out -l
